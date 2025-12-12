@@ -81,44 +81,40 @@ import express from "express";
 import nodemailer from "nodemailer";
 import cors from "cors";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
 const app = express();
-// const corsOrigin = process.env.CORS_ORIGIN || "http://localhost:3000";
-const corsOrigin = "http://localhost:3000";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const corsOrigin = process.env.CORS_ORIGIN || "http://localhost:3000";
 
 app.use(
   cors({
-    origin: corsOrigin, // allow both
+    origin: corsOrigin,
     methods: ["GET", "POST"],
   })
 );
-
-// app.use(
-//   cors({
-//     origin: "https://www.corviun.com", 
-//     methods: ["GET", "POST"],
-//   })
-// );
 
 app.use(express.json());
 
 // ZOHO SMTP CONFIG
 const transporter = nodemailer.createTransport({
   host: "smtp.zoho.com",
-  port: 465,       // Zoho SSL port
-  secure: true,    // use SSL
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.ZOHO_USER,
-    pass: process.env.ZOHO_PASS
-  }
+    pass: process.env.ZOHO_PASS,
+  },
 });
 
 // CONTACT FORM ENDPOINT
 app.post("/api/contact", async (req, res) => {
-  console.log("Received POST /api/contact:", req.body);
-
   const { firstName, lastName, email, companySize } = req.body;
 
   const mailOptions = {
@@ -129,7 +125,7 @@ app.post("/api/contact", async (req, res) => {
 Name: ${firstName} ${lastName}
 Email: ${email}
 Company Size: ${companySize}
-    `
+    `,
   };
 
   try {
@@ -142,14 +138,14 @@ Company Size: ${companySize}
   }
 });
 
-
+// TEST EMAIL ENDPOINT
 app.get("/test-email", async (req, res) => {
   try {
     await transporter.sendMail({
       from: process.env.ZOHO_USER,
       to: process.env.ZOHO_USER,
       subject: "Test Email",
-      text: "This is a test email from Nodemailer!"
+      text: "This is a test email from Nodemailer!",
     });
     res.send("Test email sent!");
   } catch (err) {
@@ -158,7 +154,7 @@ app.get("/test-email", async (req, res) => {
   }
 });
 
-
+// Verify SMTP connection
 transporter.verify((error, success) => {
   if (error) {
     console.error("SMTP connection failed:", error);
@@ -167,6 +163,12 @@ transporter.verify((error, success) => {
   }
 });
 
+// ---------------------
+// Serve frontend build (place **after API routes**)
+app.use(express.static(path.join(__dirname, "../dist")));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist/index.html"));
+});
 
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
