@@ -117,35 +117,6 @@ export const Contact: React.FC = () => {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
-  // const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault();
-  //   setStatus('submitting');
-  //   setErrorMessage('');
-    
-  //   const formData = new FormData(e.currentTarget);
-  //   const data = Object.fromEntries(formData.entries());
-
-  //   try {
-  //     const res = await fetch('http://localhost:5001/api/contact', {
-  //       method: 'POST',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify(data),
-  //     });
-
-  //     const result = await res.json();
-
-  //     if (!res.ok) {
-  //       throw new Error(result.error || 'Secure connection failed.');
-  //     }
-
-  //     setStatus('success');
-  //   } catch (err: any) {
-  //     console.error('Submission error:', err);
-  //     setErrorMessage(err.message || 'Uplink failed. Retrying handshake...');
-  //     setStatus('error');
-  //   }
-  // };
-
  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
   setStatus('submitting');
@@ -155,14 +126,18 @@ export const Contact: React.FC = () => {
   const data = Object.fromEntries(formData.entries());
 
   try {
-    // Simple fetch call; if it throws, go to catch
-    await fetch('http://localhost:5001/api/contact', {
+    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+    const res = await fetch(`${BACKEND_URL}/api/contact`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
 
-    // If fetch succeeds, show the success popup
+    if (!res.ok) {
+      const result = await res.json();
+      throw new Error(result.error || 'Secure connection failed.');
+    }
+
     setStatus('success');
   } catch (err: any) {
     console.error('Submission error:', err);
@@ -306,13 +281,6 @@ export const Contact: React.FC = () => {
               </>
             )}
           </button>
-          
-          {/* <div className="text-center">
-             <p className="text-[10px] text-slate-500 font-mono mt-4">
-               <ShieldCheck className="w-3 h-3 inline mr-1 text-slate-600" />
-               TRANSMISSION ENCRYPTED VIA TLS 1.3
-             </p>
-          </div> */}
         </form>
       </div>
     </section>
