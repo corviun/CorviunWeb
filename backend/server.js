@@ -85,12 +85,13 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
-const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:3000';
+// const corsOrigin = process.env.CORS_ORIGIN || "http://localhost:3000";
+const corsOrigin = "http://localhost:3000";
 
 app.use(
   cors({
-    origin: corsOrigin,
-    methods: ["GET", "POST"]
+    origin: corsOrigin, // allow both
+    methods: ["GET", "POST"],
   })
 );
 
