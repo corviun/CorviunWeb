@@ -117,36 +117,62 @@ export const Contact: React.FC = () => {
   const [status, setStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState('');
 
- const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-  e.preventDefault();
-  setStatus('submitting');
-  setErrorMessage('');
+//  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+//   e.preventDefault();
+//   setStatus('submitting');
+//   setErrorMessage('');
 
-  const formData = new FormData(e.currentTarget);
-  const data = Object.fromEntries(formData.entries());
+//   const formData = new FormData(e.currentTarget);
+//   const data = Object.fromEntries(formData.entries());
 
-  try {
-    const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-    const res = await fetch(`${BACKEND_URL}/api/contact`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
+//   try {
+//     // Simple fetch call; if it throws, go to catch
+//     await fetch('http://localhost:5001/api/contact', {
+//       method: 'POST',
+//       headers: { 'Content-Type': 'application/json' },
+//       body: JSON.stringify(data),
+//     });
 
-    if (!res.ok) {
-      const result = await res.json();
-      throw new Error(result.error || 'Secure connection failed.');
+//     // If fetch succeeds, show the success popup
+//     setStatus('success');
+//   } catch (err: any) {
+//     console.error('Submission error:', err);
+//     setErrorMessage(err.message || 'Uplink failed. Retrying handshake...');
+//     setStatus('error');
+//   }
+// };
+
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus("submitting");
+    setErrorMessage("");
+
+    const formData = new FormData(e.currentTarget);
+    const data = Object.fromEntries(formData.entries());
+
+    try {
+      const res = await fetch(`${BACKEND_URL}/api/contact`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      if (!res.ok) {
+        const result = await res.json();
+        throw new Error(result.error || "Secure connection failed.");
+      }
+
+      setStatus("success");
+    } catch (err: any) {
+      console.error("Submission error:", err);
+      setErrorMessage(err.message || "Uplink failed. Retrying handshake...");
+      setStatus("error");
     }
+  };
 
-    setStatus('success');
-  } catch (err: any) {
-    console.error('Submission error:', err);
-    setErrorMessage(err.message || 'Uplink failed. Retrying handshake...');
-    setStatus('error');
-  }
-};
-
-
+  
   if (status === 'success') {
     return (
       <section id="contact" className="py-24 px-4 sm:px-6 lg:px-8 relative">
