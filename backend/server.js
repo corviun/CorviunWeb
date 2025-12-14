@@ -1,58 +1,45 @@
 import express from "express";
-import nodemailer from "nodemailer";
 import cors from "cors";
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
+import sgMail from "@sendgrid/mail";
 
 dotenv.config();
 
 const app = express();
-
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// CORS
 const corsOrigin = process.env.CORS_ORIGIN || "http://localhost:3000";
-
 app.use(
   cors({
-    origin: corsOrigin,
+    origin: corsOrigin.split(","),
     methods: ["GET", "POST"],
   })
 );
 
 app.use(express.json());
 
-// ZOHO SMTP CONFIG
-// const transporter = nodemailer.createTransport({
-//   host: "smtp.zoho.com",
-//   port: 587,
-//   secure: true,
-//   auth: {
-//     user: process.env.ZOHO_USER,
-//     pass: process.env.ZOHO_PASS,
-//   },
-// });
-const transporter = nodemailer.createTransport({
-  host: "smtp.zoho.com",
-  port: 587,
-  secure: false, // use TLS
-  auth: {
-    user: process.env.ZOHO_USER,
-    pass: process.env.ZOHO_PASS,
-  },
-  tls: {
-    rejectUnauthorized: false, // allows self-signed certs
-  },
-});
+// SENDGRID SETUP
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // CONTACT FORM ENDPOINT
 app.post("/api/contact", async (req, res) => {
   const { firstName, lastName, email, companySize } = req.body;
 
-  const mailOptions = {
-    from: process.env.ZOHO_USER,
-    to: process.env.ZOHO_USER,
+  if (!firstName || !lastName || !email || !companySize) {
+    return res.status(400).json({ error: "Missing required fields." });
+  }
+
+  const msg = {
+    to: process.env.TO_EMAIL,
+    from: {
+      email: process.env.FROM_EMAIL,
+      name: "Corviun Website",
+    },
+    replyTo: email,
     subject: "New Website Contact Form Submission",
     text: `
 Name: ${firstName} ${lastName}
@@ -62,11 +49,10 @@ Company Size: ${companySize}
   };
 
   try {
-    const info = await transporter.sendMail(mailOptions);
-    console.log("Email info:", info);
-    res.status(200).json({ message: "Email sent!" });
+    await sgMail.send(msg);
+    res.status(200).json({ message: "Email sent successfully." });
   } catch (error) {
-    console.error("Email error:", error);
+    console.error("SendGrid API error:", error.response?.body || error);
     res.status(500).json({ error: "Failed to send email." });
   }
 });
@@ -74,37 +60,29 @@ Company Size: ${companySize}
 // TEST EMAIL ENDPOINT
 app.get("/test-email", async (req, res) => {
   try {
-    await transporter.sendMail({
-      from: process.env.ZOHO_USER,
-      to: process.env.ZOHO_USER,
-      subject: "Test Email",
-      text: "This is a test email from Nodemailer!",
+    await sgMail.send({
+      to: process.env.TO_EMAIL,
+      from: { email: process.env.FROM_EMAIL, name: "Corviun Test" },
+      subject: "SendGrid API Test Email",
+      text: "This is a test email sent via SendGrid Web API.",
     });
-    res.send("Test email sent!");
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Test email failed");
+    res.send("Test email sent successfully.");
+  } catch (error) {
+    console.error("SendGrid API test error:", error.response?.body || error);
+    res.status(500).send("Test email failed.");
   }
 });
 
-// Verify SMTP connection
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("SMTP connection failed:", error);
-  } else {
-    console.log("SMTP is ready to send messages");
-  }
-});
-
-// Serve frontend build
+// SERVE FRONTEND
 const frontendPath = path.join(__dirname, "../dist");
 app.use(express.static(frontendPath));
 
-// Catch-all for React routing
+// REACT ROUTER FALLBACK
 app.use((req, res) => {
   res.sendFile(path.join(frontendPath, "index.html"));
 });
 
+// START SERVER
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => {
   console.log(`Backend running on port ${PORT}`);
