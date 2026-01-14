@@ -206,6 +206,7 @@ export const Contact: React.FC = () => {
       lname: formData.get('lastName'),
       email: formData.get('email'),
       company: formData.get('company'), 
+      companyURL: formData.get('companyURL'), 
       company_size: formData.get('companySize'), // Mapping size to 'company' context,
       lead_source: "Website"
     };
@@ -328,6 +329,19 @@ export const Contact: React.FC = () => {
               disabled={status === 'submitting'}
               className="w-full bg-slate-900/50 border border-slate-700 rounded p-3 text-white focus:border-brand-accent focus:outline-none focus:ring-1 focus:ring-brand-accent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
               placeholder="Corviun Cyber"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label htmlFor="companyURL" className="text-xs font-mono text-brand-accent uppercase">Company URL</label>
+            <input
+              required
+              type="text"
+              name="companyURL"
+              id="companyURL"
+              disabled={status === 'submitting'}
+              className="w-full bg-slate-900/50 border border-slate-700 rounded p-3 text-white focus:border-brand-accent focus:outline-none focus:ring-1 focus:ring-brand-accent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              placeholder="jane@corviuncyber.com"
             />
           </div>
           
