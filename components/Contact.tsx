@@ -341,7 +341,7 @@ export const Contact: React.FC = () => {
               id="companyURL"
               disabled={status === 'submitting'}
               className="w-full bg-slate-900/50 border border-slate-700 rounded p-3 text-white focus:border-brand-accent focus:outline-none focus:ring-1 focus:ring-brand-accent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              placeholder="jane@corviuncyber.com"
+              placeholder="corviun.com"
             />
           </div>
           
@@ -354,7 +354,7 @@ export const Contact: React.FC = () => {
               id="email"
               disabled={status === 'submitting'}
               className="w-full bg-slate-900/50 border border-slate-700 rounded p-3 text-white focus:border-brand-accent focus:outline-none focus:ring-1 focus:ring-brand-accent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              placeholder="jane@corviuncyber.com"
+              placeholder="jane@corviun.com"
             />
           </div>
 
