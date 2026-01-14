@@ -45,6 +45,7 @@ app.post("/api/contact", async (req, res) => {
     text: `
 Name: ${firstName} ${lastName}
 Email: ${email}
+Company: ${company}
 Company Size: ${companySize}
     `,
   };

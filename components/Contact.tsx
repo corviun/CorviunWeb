@@ -203,8 +203,9 @@ export const Contact: React.FC = () => {
     const payload = {
       name: `${formData.get('firstName')} ${formData.get('lastName')}`,
       email: formData.get('email'),
-      company: formData.get('companySize'), // Mapping size to 'company' context
-      lead_source: "Website Landing Page"
+      company: formData.get('company'), 
+      company_size: formData.get('companySize'), // Mapping size to 'company' context,
+      lead_source: "Website"
     };
 
     try {
