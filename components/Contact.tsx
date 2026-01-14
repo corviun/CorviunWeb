@@ -190,7 +190,7 @@ export const Contact: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState('');
 
   // We are bypassing the env variable to point directly to your AWS n8n instance for the demo
-  const WEBHOOK_URL = "http://18.219.73.170:5678/webhook/contact-form";
+  const WEBHOOK_URL = "https://rich-unforested-sulfureously.ngrok-free.dev/webhook/contact-form";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
