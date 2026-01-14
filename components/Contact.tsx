@@ -202,6 +202,8 @@ export const Contact: React.FC = () => {
     // Construct the payload to match what we tested in the terminal
     const payload = {
       name: `${formData.get('firstName')} ${formData.get('lastName')}`,
+      fname: formData.get('firstName'),
+      lname: formData.get('lastName'),
       email: formData.get('email'),
       company: formData.get('company'), 
       company_size: formData.get('companySize'), // Mapping size to 'company' context,
