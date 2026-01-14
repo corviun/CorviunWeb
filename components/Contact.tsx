@@ -268,7 +268,7 @@ export const Contact: React.FC = () => {
   return (
     <section id="contact" className="py-24 px-4 sm:px-6 lg:px-8 relative">
       <div className="max-w-3xl mx-auto text-center mb-12">
-        <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Secure Your Assets!!!</h2>
+        <h2 className="text-3xl md:text-5xl font-bold text-white mb-4">Secure Your Assets</h2>
         <p className="text-slate-400">Request a confidential infrastructure review. No commitment required.</p>
       </div>
 
@@ -325,7 +325,7 @@ export const Contact: React.FC = () => {
               id="company"
               disabled={status === 'submitting'}
               className="w-full bg-slate-900/50 border border-slate-700 rounded p-3 text-white focus:border-brand-accent focus:outline-none focus:ring-1 focus:ring-brand-accent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              placeholder="Acme Corp"
+              placeholder="Corviun Cyber"
             />
           </div>
           
@@ -338,7 +338,7 @@ export const Contact: React.FC = () => {
               id="email"
               disabled={status === 'submitting'}
               className="w-full bg-slate-900/50 border border-slate-700 rounded p-3 text-white focus:border-brand-accent focus:outline-none focus:ring-1 focus:ring-brand-accent transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-              placeholder="jane@company.com"
+              placeholder="jane@corviuncyber.com"
             />
           </div>
 
