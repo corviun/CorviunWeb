@@ -208,12 +208,11 @@ export const Contact: React.FC = () => {
     };
 
     try {
-      // Sending data directly to your n8n webhook
       const res = await fetch(WEBHOOK_URL, {
         method: "POST",
         headers: { 
           "Content-Type": "application/json",
-          // 'Accept': 'application/json' 
+          "ngrok-skip-browser-warning": "true", // <--- THIS IS THE MAGIC KEY
         },
         body: JSON.stringify(payload),
       });
