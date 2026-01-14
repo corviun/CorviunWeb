@@ -75,7 +75,7 @@ app.get("/test-email", async (req, res) => {
 });
 
 // SERVE FRONTEND BUILD
-const frontendPath = path.join(__dirname, "../dist");
+const frontendPath = path.join(__dirname, "dist");
 app.use(express.static(frontendPath));
 
 // REACT ROUTER FALLBACK
